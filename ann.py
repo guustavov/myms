@@ -7,8 +7,8 @@ class OriginalANN:
         self.model = Sequential()
 
     def fit(self, x, Y):
-        inputNeurons = 1
-        hiddenNeurons = 1
+        inputNeurons = 23
+        hiddenNeurons = 23
         outputNeurons = 1
         inputActivation = hiddenActivation = outputActivation = 'tanh'
 
@@ -19,7 +19,10 @@ class OriginalANN:
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
         
         early_stopping = EarlyStopping(monitor='loss',patience=20)
-        return self.model.fit(x, Y, epochs=500, verbose=1, callbacks=[early_stopping])
+        return self.model.fit(x, Y, epochs=500, verbose=0, callbacks=[early_stopping])
 
-    def predict(self, x):
-        return self.model.predict(x)
+    def predict(self, test_x):
+        return self.model.predict(test_x)
+
+    def predict_classes(self, test_x):
+        return self.model.predict_classes(test_x)

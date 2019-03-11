@@ -8,5 +8,5 @@ class OriginalKNN:
         self.model = KNeighborsClassifier(self.k_neighbors, weights='uniform', algorithm='brute')
         self.model.fit(x, Y)
 
-    def predict(self, x):
-        return self.model.predict(x)
+    def predict(self, test_x):
+        return self.model.predict(test_x)

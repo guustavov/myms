@@ -22,7 +22,7 @@ def createFolds(datasetPath, foldsPath):
     folds = splitDataset(folds[0], classFeatureName, 10)
 
     for index, fold in enumerate(folds):
-        writeFoldToCsv(fold, index, foldsPath)
+        f.saveFoldToCsv(fold, index, foldsPath)
 
 def binarizeDataset(dataset, classFeatureName):
     benignFilter = dataset[classFeatureName] == "BENIGN"
@@ -46,9 +46,3 @@ def splitDataset(dataset, classFeatureName, numberOfSplits = 10):
         folds.append(pd.DataFrame(dataset.values[indexes[1],], columns = names))
 
     return folds
-
-def writeFoldToCsv(fold, foldIndex, destinationPath):
-    foldFilename = "fold_" + str(foldIndex) + ".csv"
-    fold.to_csv(destinationPath + foldFilename, index = False)
-
-    auxiliaryLog.log(foldFilename + ' saved')

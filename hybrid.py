@@ -4,10 +4,11 @@ from ann import OriginalANN
 from knn import OriginalKNN
 
 class OriginalHybrid(object):
-    def __init__(self, train_x, train_Y, superiorLimit, inferiorLimit):
+    def __init__(self, superiorLimit, inferiorLimit):
         self.superiorLimit = superiorLimit
         self.inferiorLimit = inferiorLimit
 
+    def fit(self, train_x, train_Y):
         self.ann = OriginalANN()
         self.knn = OriginalKNN()
 

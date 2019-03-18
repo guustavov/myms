@@ -1,8 +1,12 @@
 import numpy as np
 import pandas as pd
 import fileUtils as f
+import glob
 import auxiliaryLog
 from sklearn.model_selection import StratifiedKFold
+from hybrid import OriginalHybrid
+
+import os, os.path
 
 def createFolds(datasetPath, foldsPath):
     dataset = pd.read_csv(datasetPath)
@@ -46,3 +50,12 @@ def splitDataset(dataset, classFeatureName, numberOfSplits = 10):
         folds.append(pd.DataFrame(dataset.values[indexes[1],], columns = names))
 
     return folds
+
+def run(model, foldsPath):
+	numberOfFolds = len([name for name in os.listdir(foldsPath) if os.path.isfile(os.path.join(foldsPath, name))])
+	if (isinstance(model, OriginalHybrid)):
+		for iteration in range(0,numberOfFolds):
+			trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
+			trainData = pd.concat((pd.read_csv(fold) for fold in trainFolds))
+			testData = pd.read_csv(foldsPath + "fold_" + str(iteration) + ".csv")
+			print(str(trainData.shape) + ' ' + str(testData.shape))

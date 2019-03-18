@@ -1,6 +1,6 @@
 from sklearn.neighbors import KNeighborsClassifier
 
-class OriginalKNN:
+class OriginalKNN(object):
     def __init__(self):
         self.k_neighbors = 1
 

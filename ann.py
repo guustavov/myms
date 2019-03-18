@@ -2,7 +2,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.callbacks import EarlyStopping
 
-class OriginalANN:
+class OriginalANN(object):
     def __init__(self):
         self.model = Sequential()
 

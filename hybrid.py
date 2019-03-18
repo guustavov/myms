@@ -3,7 +3,7 @@ import pandas as pd
 from ann import OriginalANN
 from knn import OriginalKNN
 
-class OriginalHybrid:
+class OriginalHybrid(object):
     def __init__(self, train_x, train_Y, superiorLimit, inferiorLimit):
         self.superiorLimit = superiorLimit
         self.inferiorLimit = inferiorLimit

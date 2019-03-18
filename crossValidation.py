@@ -39,7 +39,7 @@ def splitDataset(dataset, classFeatureName, numberOfSplits = 10):
     x = dataset.drop([classFeatureName], axis = 1) # all instances with no class feature
     y = getattr(dataset, classFeatureName).values # class feature of all instances
 
-    splitter = StratifiedKFold(n_splits = 10)
+    splitter = StratifiedKFold(numberOfSplits)
 
     folds = []
     for indexes in splitter.split(x, y):

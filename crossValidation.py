@@ -5,6 +5,7 @@ import glob
 import auxiliaryLog
 from sklearn.model_selection import StratifiedKFold
 from hybrid import OriginalHybrid
+from sklearn import metrics
 
 import os, os.path
 
@@ -58,4 +59,27 @@ def run(model, foldsPath):
 			trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
 			trainData = pd.concat((pd.read_csv(fold) for fold in trainFolds))
 			testData = pd.read_csv(foldsPath + "fold_" + str(iteration) + ".csv")
-			print(str(trainData.shape) + ' ' + str(testData.shape))
+
+			train_x, train_Y = splitXY(trainData)
+			test_x, test_Y = splitXY(testData)
+
+			model.fit(train_x, train_Y)
+			predictions = model.predict(test_x)
+
+			accuracy_score = metrics.accuracy_score(test_Y, predictions)
+			precision_score = metrics.precision_score(test_Y, predictions)
+			recall_score = metrics.recall_score(test_Y, predictions)
+			f1_score = metrics.f1_score(test_Y, predictions)
+			confusion_matrix = metrics.confusion_matrix(test_Y, predictions)
+
+			print('acc: ' + str(accuracy_score)
+			+ '\n' + 'pre: ' + str(precision_score)
+			+ '\n' + 'rec: ' + str(recall_score)
+			+ '\n' + 'f1: ' + str(f1_score)
+			+ '\n' + 'matrix: ' + str(confusion_matrix))
+
+	
+def splitXY(data):
+	if(isinstance(data, pd.DataFrame)):
+		data = data.values
+	return data[:, :-1], data[:, -1]

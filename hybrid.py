@@ -15,7 +15,7 @@ class OriginalHybrid(object):
         self.ann.fit(train_x, train_Y)
         self.knn.fit(train_x, train_Y)
 
-    def predict(self, test_x, test_Y):
+    def predict(self, test_x):
         annOutput = self.ann.predict(test_x)
         annPredictions = self.ann.predict_classes(test_x)
 
@@ -42,8 +42,14 @@ class OriginalHybrid(object):
         negativeElements = predictions[predictions < 0]
 
         # set upper and lower thresholds based on ann output
-        self.upperThreshold = np.percentile(positiveElements, self.superiorLimit)
-        self.lowerThreshold = np.percentile(negativeElements, (100 - self.inferiorLimit))
+        if(len(positiveElements)):
+            self.upperThreshold = np.percentile(positiveElements, self.superiorLimit)
+        else:
+            self.upperThreshold = 1
+        if(len(negativeElements)):
+            self.lowerThreshold = np.percentile(negativeElements, (100 - self.inferiorLimit))
+        else:
+            self.upperThreshold = -1
 
         # mask to get elements contained in the intermediate range
         return (predictions <= self.upperThreshold) & (predictions >= self.lowerThreshold)

@@ -26,3 +26,6 @@ class OriginalANN(object):
 
     def predict_classes(self, test_x):
         return self.model.predict_classes(test_x)
+
+    def getName(self):
+        return self.__class__.__name__

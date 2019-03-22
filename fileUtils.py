@@ -1,9 +1,9 @@
 import pickle, datetime, os, auxiliaryLog
 
-def saveModelToFile(model, path, cvIteration, prefix = ''):
+def saveModelToFile(model, path, cvIteration):
     createDirectory(path)
 
-    fileName = path + prefix + str(cvIteration)
+    fileName = path + model.__class__.__name__ + "_" + str(cvIteration)
     pickle.dump(model, open(fileName, 'wb'))
     auxiliaryLog.log(fileName + ' saved')
 

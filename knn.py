@@ -10,3 +10,6 @@ class OriginalKNN(object):
 
     def predict(self, test_x):
         return self.model.predict(test_x)
+
+    def getName(self):
+        return self.__class__.__name__

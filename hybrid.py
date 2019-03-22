@@ -1,3 +1,6 @@
+# to ensure true division in python 2
+from __future__ import division
+
 import numpy as np
 import pandas as pd
 from ann import OriginalANN
@@ -17,6 +20,7 @@ class OriginalHybrid(object):
 
     def predict(self, test_x):
         annOutput = self.ann.predict(test_x)
+        np.set_printoptions(threshold=np.inf)
         annPredictions = self.ann.predict_classes(test_x)
 
         hybridPredictions = annPredictions
@@ -26,9 +30,9 @@ class OriginalHybrid(object):
         mask = self.getIntermediateRangeMask(annOutput).ravel()
         indexesOfElementsToReclassify = np.where(mask)[0]
 
-        knn_test_x = test_x[indexesOfElementsToReclassify]
+        knn_test_x = test_x[indexesOfElementsToReclassify]  
 
-        self.numberOfReclassified = len(indexesOfElementsToReclassify)
+        self.percentageOfReclassified = (len(indexesOfElementsToReclassify) / len(test_x)) * 100
 
         knnPredictions = self.knn.predict(knn_test_x)
         
@@ -58,5 +62,5 @@ class OriginalHybrid(object):
         for (index, newPrediction) in zip(newPredictionsIndexes, newPredictions):
             oldPredictions[index] = newPrediction
 
-    def getNumberOfReclassified(self):
-        return self.numberOfReclassified
+    def getName(self):
+        return self.__class__.__name__

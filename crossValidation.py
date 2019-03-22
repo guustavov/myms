@@ -56,6 +56,10 @@ def run(model, foldsPath):
 	numberOfFolds = len([name for name in os.listdir(foldsPath) if os.path.isfile(os.path.join(foldsPath, name))])
 	if (isinstance(model, OriginalHybrid)):
 		for iteration in range(0,numberOfFolds):
+                        modelClassName = (model.__class__.__name__ 
+                                + str(model.superiorLimit) + "_" 
+                                + str(model.inferiorLimit))
+
 			trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
 			trainData = pd.concat((pd.read_csv(fold) for fold in trainFolds))
 			testData = pd.read_csv(foldsPath + "fold_" + str(iteration) + ".csv")
@@ -64,6 +68,12 @@ def run(model, foldsPath):
 			test_x, test_Y = splitXY(testData)
 
 			model.fit(train_x, train_Y)
+
+			pathToPersistModels = foldsPath + modelClassName
+			f.createDirectory(pathToPersistModels)
+			f.saveModelToFile(model.ann.model, pathToPersistModels, iteration)
+			f.saveModelToFile(model.knn.model, pathToPersistModels, iteration)
+
 			predictions = model.predict(test_x)
 
 			accuracy_score = metrics.accuracy_score(test_Y, predictions)
@@ -71,13 +81,14 @@ def run(model, foldsPath):
 			recall_score = metrics.recall_score(test_Y, predictions)
 			f1_score = metrics.f1_score(test_Y, predictions)
 			confusion_matrix = metrics.confusion_matrix(test_Y, predictions)
-
+                        
+			auxiliaryLog.log("performed prediction of " + modelClassName + "[iteration" + str(iteration) + "]")
 			print('acc: ' + str(accuracy_score)
-			+ '\n' + 'pre: ' + str(precision_score)
-			+ '\n' + 'rec: ' + str(recall_score)
-			+ '\n' + 'f1: ' + str(f1_score)
-			+ '\n' + 'matrix: ' + str(confusion_matrix))
-
+				+ '\npre: ' + str(precision_score)
+				+ '\nrec: ' + str(recall_score)
+				+ '\nf1: ' + str(f1_score)
+				+ '\nreclassified: ' + str(model.percentageOfReclassified) + '%'
+				+ '\n' + 'matrix: ' + str(confusion_matrix))
 	
 def splitXY(data):
 	if(isinstance(data, pd.DataFrame)):

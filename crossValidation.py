@@ -69,10 +69,10 @@ def run(model, foldsPath):
 
 			model.fit(train_x, train_Y)
 
-			pathToPersistModels = foldsPath + modelClassName
+			pathToPersistModels = foldsPath + modelClassName + '/'
 			f.createDirectory(pathToPersistModels)
 			f.saveModelToFile(model.ann.model, pathToPersistModels, iteration)
-			f.saveModelToFile(model.knn.model, pathToPersistModels, iteration)
+			# f.saveModelToFile(model.knn.model, pathToPersistModels, iteration)
 
 			predictions = model.predict(test_x)
 
@@ -83,12 +83,14 @@ def run(model, foldsPath):
 			confusion_matrix = metrics.confusion_matrix(test_Y, predictions)
                         
 			auxiliaryLog.log("performed prediction of " + modelClassName + "[iteration" + str(iteration) + "]")
-			print('acc: ' + str(accuracy_score)
+			result = ('acc: ' + str(accuracy_score)
 				+ '\npre: ' + str(precision_score)
 				+ '\nrec: ' + str(recall_score)
 				+ '\nf1: ' + str(f1_score)
 				+ '\nreclassified: ' + str(model.percentageOfReclassified) + '%'
 				+ '\n' + 'matrix: ' + str(confusion_matrix))
+
+			f.saveResultToFile(result, foldsPath + "results/", iteration)
 	
 def splitXY(data):
 	if(isinstance(data, pd.DataFrame)):

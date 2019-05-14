@@ -12,6 +12,13 @@ def saveFoldToCsv(fold, foldIndex, destinationPath):
     fold.to_csv(destinationPath + fileName, index = False)
     auxiliaryLog.log(fileName + ' saved')
 
+def saveResultToFile(result, path, cvIteration):
+	createDirectory(path)
+
+	fileName = path + "result_" + str(cvIteration)
+	pickle.dump(result, open(fileName, 'wb'))
+	auxiliaryLog.log(fileName + ' saved')
+
 def createDirectory(directoryPath):
     if not os.path.exists(directoryPath):
         os.makedirs(directoryPath)

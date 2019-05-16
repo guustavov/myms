@@ -23,9 +23,6 @@ def createFolds(datasetPath, foldsPath):
 
     folds = splitDataset(dataset, classFeatureName, 10)
 
-    # using only 10% of the original dataset
-    folds = splitDataset(folds[0], classFeatureName, 10)
-
     for index, fold in enumerate(folds):
         f.saveFoldToCsv(fold, index, foldsPath)
 

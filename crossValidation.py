@@ -87,7 +87,7 @@ def run(model, foldsPath):
 				+ '\nreclassified: ' + str(model.percentageOfReclassified) + '%'
 				+ '\n' + 'matrix: ' + str(confusion_matrix))
 
-			f.saveResultToFile(result, foldsPath + "results/", iteration)
+			f.saveResultToFile(result, pathToPersistModels + "results/", iteration)
 	
 def splitXY(data):
 	if(isinstance(data, pd.DataFrame)):

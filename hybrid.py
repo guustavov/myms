@@ -33,10 +33,11 @@ class OriginalHybrid(object):
         knn_test_x = test_x[indexesOfElementsToReclassify]  
 
         self.percentageOfReclassified = (len(indexesOfElementsToReclassify) / len(test_x)) * 100
-
-        knnPredictions = self.knn.predict(knn_test_x)
         
-        self.replaceNewPredictions(hybridPredictions, knnPredictions, indexesOfElementsToReclassify)
+        if(self.percentageOfReclassified > 0):
+            knnPredictions = self.knn.predict(knn_test_x)
+            
+            self.replaceNewPredictions(hybridPredictions, knnPredictions, indexesOfElementsToReclassify)
 
         return hybridPredictions
 

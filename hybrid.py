@@ -30,13 +30,14 @@ class OriginalHybrid(object):
         mask = self.getIntermediateRangeMask(annOutput).ravel()
         indexesOfElementsToReclassify = np.where(mask)[0]
 
-        knn_test_x = test_x[indexesOfElementsToReclassify]  
+        knn_test_x = test_x[indexesOfElementsToReclassify]
 
-        self.percentageOfReclassified = (len(indexesOfElementsToReclassify) / len(test_x)) * 100
+        if(len(knn_test_x) > 0):
+            self.percentageOfReclassified = (len(indexesOfElementsToReclassify) / len(test_x)) * 100
 
-        knnPredictions = self.knn.predict(knn_test_x)
-        
-        self.replaceNewPredictions(hybridPredictions, knnPredictions, indexesOfElementsToReclassify)
+            knnPredictions = self.knn.predict(knn_test_x)
+            
+            self.replaceNewPredictions(hybridPredictions, knnPredictions, indexesOfElementsToReclassify)
 
         return hybridPredictions
 

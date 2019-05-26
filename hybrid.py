@@ -54,7 +54,7 @@ class OriginalHybrid(object):
         if(len(negativeElements)):
             self.lowerThreshold = np.percentile(negativeElements, (100 - self.inferiorLimit))
         else:
-            self.upperThreshold = -1
+            self.lowerThreshold = -1
 
         # mask to get elements contained in the intermediate range
         return (predictions <= self.upperThreshold) & (predictions >= self.lowerThreshold)

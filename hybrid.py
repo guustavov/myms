@@ -33,10 +33,11 @@ class OriginalHybrid(object):
         knn_test_x = test_x[indexesOfElementsToReclassify]  
 
         self.percentageOfReclassified = (len(indexesOfElementsToReclassify) / len(test_x)) * 100
-
-        knnPredictions = self.knn.predict(knn_test_x)
         
-        self.replaceNewPredictions(hybridPredictions, knnPredictions, indexesOfElementsToReclassify)
+        if(self.percentageOfReclassified > 0):
+            knnPredictions = self.knn.predict(knn_test_x)
+            
+            self.replaceNewPredictions(hybridPredictions, knnPredictions, indexesOfElementsToReclassify)
 
         return hybridPredictions
 
@@ -53,7 +54,7 @@ class OriginalHybrid(object):
         if(len(negativeElements)):
             self.lowerThreshold = np.percentile(negativeElements, (100 - self.inferiorLimit))
         else:
-            self.upperThreshold = -1
+            self.lowerThreshold = -1
 
         # mask to get elements contained in the intermediate range
         return (predictions <= self.upperThreshold) & (predictions >= self.lowerThreshold)

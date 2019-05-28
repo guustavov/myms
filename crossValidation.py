@@ -51,11 +51,17 @@ def splitDataset(dataset, classFeatureName, numberOfSplits = 10):
 
 def run(model, foldsPath):
 	numberOfFolds = len([name for name in os.listdir(foldsPath) if os.path.isfile(os.path.join(foldsPath, name))])
+
+	modelClassName = (model.__class__.__name__ 
+					+ str(model.superiorLimit) + "_" 
+					+ str(model.inferiorLimit))
+	pathToPersistModels = foldsPath + modelClassName + '/'
+
 	if (isinstance(model, OriginalHybrid)):
 		for iteration in range(0,numberOfFolds):
-                        modelClassName = (model.__class__.__name__ 
-                                + str(model.superiorLimit) + "_" 
-                                + str(model.inferiorLimit))
+			if (os.path.isfile(pathToPersistModels + 'results/result_' + str(iteration))):
+				auxiliaryLog.log('skipped ' + modelClassName + ' [iteration ' + str(iteration) + ']')
+				continue
 
 			trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
 			trainData = pd.concat((pd.read_csv(fold) for fold in trainFolds))
@@ -66,7 +72,6 @@ def run(model, foldsPath):
 
 			model.fit(train_x, train_Y)
 
-			pathToPersistModels = foldsPath + modelClassName + '/'
 			f.createDirectory(pathToPersistModels)
 			f.saveModelToFile(model.ann.model, pathToPersistModels, iteration)
 			# f.saveModelToFile(model.knn.model, pathToPersistModels, iteration)

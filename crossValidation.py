@@ -5,6 +5,7 @@ import glob
 import auxiliaryLog
 from sklearn.model_selection import StratifiedKFold
 from hybrid import OriginalHybrid
+from ann import SoftmaxANN
 from sklearn import metrics
 
 import os, os.path
@@ -52,12 +53,12 @@ def splitDataset(dataset, classFeatureName, numberOfSplits = 10):
 def run(model, foldsPath):
 	numberOfFolds = len([name for name in os.listdir(foldsPath) if os.path.isfile(os.path.join(foldsPath, name))])
 
-	modelClassName = (model.__class__.__name__ 
-					+ str(model.superiorLimit) + "_" 
-					+ str(model.inferiorLimit))
+	modelClassName = (model.__class__.__name__) 
+					#+ str(model.superiorLimit) + "_" 
+					#+ str(model.inferiorLimit))
 	pathToPersistModels = foldsPath + modelClassName + '/'
 
-	if (isinstance(model, OriginalHybrid)):
+	if (isinstance(model, SoftmaxANN)):
 		for iteration in range(0,numberOfFolds):
 			if (os.path.isfile(pathToPersistModels + 'results/result_' + str(iteration))):
 				auxiliaryLog.log('skipped ' + modelClassName + ' [iteration ' + str(iteration) + ']')
@@ -70,13 +71,18 @@ def run(model, foldsPath):
 			train_x, train_Y = splitXY(trainData)
 			test_x, test_Y = splitXY(testData)
 
-			model.fit(train_x, train_Y)
+			history = model.fit(train_x, train_Y)
+			
+			print(history.history['acc'])
+			print(history.history['loss'])
 
 			f.createDirectory(pathToPersistModels)
-			f.saveModelToFile(model.ann.model, pathToPersistModels, iteration)
+			f.saveModelToFile(model, pathToPersistModels, iteration)
 			# f.saveModelToFile(model.knn.model, pathToPersistModels, iteration)
 
 			predictions = model.predict(test_x)
+
+			print(predictions)
 
 			accuracy_score = metrics.accuracy_score(test_Y, predictions)
 			precision_score = metrics.precision_score(test_Y, predictions)
@@ -92,7 +98,7 @@ def run(model, foldsPath):
 				+ '\nreclassified: ' + str(model.percentageOfReclassified) + '%'
 				+ '\n' + 'matrix: ' + str(confusion_matrix))
 
-			f.saveResultToFile(result, pathToPersistModels + "results/", iteration)
+			f.saveResultToFile(result, pathToPersistModels + "results_softmax/", iteration)
 	
 def splitXY(data):
 	if(isinstance(data, pd.DataFrame)):

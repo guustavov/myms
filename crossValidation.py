@@ -72,9 +72,6 @@ def run(model, foldsPath):
 			test_x, test_Y = splitXY(testData)
 
 			history = model.fit(train_x, train_Y)
-			
-			print(history.history['acc'])
-			print(history.history['loss'])
 
 			f.createDirectory(pathToPersistModels)
 			f.saveModelToFile(model, pathToPersistModels, iteration)
@@ -82,7 +79,7 @@ def run(model, foldsPath):
 
 			predictions = model.predict(test_x)
 
-			print(predictions)
+			predictions = np.argmax(predictions, axis = 1)
 
 			accuracy_score = metrics.accuracy_score(test_Y, predictions)
 			precision_score = metrics.precision_score(test_Y, predictions)
@@ -95,8 +92,10 @@ def run(model, foldsPath):
 				+ '\npre: ' + str(precision_score)
 				+ '\nrec: ' + str(recall_score)
 				+ '\nf1: ' + str(f1_score)
-				+ '\nreclassified: ' + str(model.percentageOfReclassified) + '%'
 				+ '\n' + 'matrix: ' + str(confusion_matrix))
+
+			if hasattr(model, 'percentageOfReclassified'):
+				result = result + '\nreclassified: ' + str(model.percentageOfReclassified) + '%'
 
 			f.saveResultToFile(result, pathToPersistModels + "results_softmax/", iteration)
 	

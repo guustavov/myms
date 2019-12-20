@@ -36,17 +36,14 @@ class SoftmaxANN(object):
         self.model = Sequential()
 
     def fit(self, x, Y):
+        # Represent class label as binary vectors (One Hot Encoding)
         Y = to_categorical(Y)
-
-        print(x.shape)
-        print(Y.shape)
 
         inputNeurons = 23
         hiddenNeurons = 23
         outputNeurons = 2
         hiddenActivation = 'relu'
         outputActivation = 'softmax'
-
 
         self.model.add(Dense(inputNeurons, input_dim = inputNeurons))
         self.model.add(Dense(hiddenNeurons, kernel_initializer='normal', activation=hiddenActivation))

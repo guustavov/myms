@@ -6,7 +6,7 @@ import auxiliaryLog
 from sklearn.model_selection import StratifiedKFold
 from hybrid import OriginalHybrid
 from ann import SoftmaxANN
-from sklearn import metrics
+from sklearn import metrics, preprocessing
 
 import os, os.path
 
@@ -74,6 +74,9 @@ def run(model, foldsPath):
 		train_x, train_Y = splitXY(trainData)
 		test_x, test_Y = splitXY(testData)
 
+		train_Y = transformLabelToOrdinal(train_Y)
+		test_Y = transformLabelToOrdinal(test_Y)
+
 		history = model.fit(train_x, train_Y)
 
 		predictions = model.predict(test_x)
@@ -107,3 +110,8 @@ def splitXY(data):
 	if(isinstance(data, pd.DataFrame)):
 		data = data.values
 	return data[:, :-1], data[:, -1]
+
+def transformLabelToOrdinal(Y):
+	le = preprocessing.LabelEncoder()
+	le.fit(np.unique(Y))
+	return le.transform(Y)

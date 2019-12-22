@@ -1,3 +1,5 @@
+import numpy as np
+
 from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.callbacks import EarlyStopping
@@ -55,7 +57,7 @@ class SoftmaxANN(object):
         return self.model.fit(x, Y, epochs=500, verbose=2, callbacks=[early_stopping])
 
     def predict(self, test_x):
-        return self.model.predict(test_x)
+        return np.argmax(self.model.predict(test_x), axis = 1)
 
     def predict_classes(self, test_x):
         return self.model.predict_classes(test_x)

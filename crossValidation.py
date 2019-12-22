@@ -74,6 +74,8 @@ def run(model, foldsPath):
 		train_x, train_Y = splitXY(trainData)
 		test_x, test_Y = splitXY(testData)
 
+		labels = np.unique(train_Y)
+
 		train_Y = transformLabelToOrdinal(train_Y)
 		test_Y = transformLabelToOrdinal(test_Y)
 
@@ -90,11 +92,10 @@ def run(model, foldsPath):
 		}
 
 		if isinstance(model, OriginalHybrid):
-			resultMetrics.reclassified = '{}%'.format(model.percentageOfReclassified)
+			resultMetrics['reclassified'] = '{}%'.format(model.percentageOfReclassified)
 
 		resultMetricsDataFrame = resultMetricsDataFrame.append(resultMetrics, ignore_index=True)
-
-		confusion_matrix = metrics.confusion_matrix(test_Y, predictions)
+		confusion_matrix = pd.DataFrame(metrics.confusion_matrix(test_Y, predictions), columns=labels, index=labels)
 
 		iterationArtifacts = {
 			'model': model,

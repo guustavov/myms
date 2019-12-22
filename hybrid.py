@@ -15,8 +15,10 @@ class OriginalHybrid(object):
         self.ann = OriginalANN()
         self.knn = OriginalKNN()
 
-        self.ann.fit(train_x, train_Y)
+        history = self.ann.fit(train_x, train_Y)
         self.knn.fit(train_x, train_Y)
+
+        return history
 
     def predict(self, test_x):
         annOutput = self.ann.predict(test_x)
@@ -64,4 +66,4 @@ class OriginalHybrid(object):
             oldPredictions[index] = newPrediction
 
     def getName(self):
-        return self.__class__.__name__
+        return '{}_{}_{}'.format(self.__class__.__name__, self.superiorLimit, self.inferiorLimit)

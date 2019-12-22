@@ -1,22 +1,48 @@
 import pickle, datetime, os, auxiliaryLog
+import numpy as np
+from hybrid import OriginalHybrid
 
-def saveModelToFile(model, path, cvIteration):
+def saveIterationArtifactsToFile(artifacts, path, cvIteration):
+    model = artifacts.model
+    history = artifacts.history
+    confusion_matrix = artifacts.confusion_matrix
+
+    modelName = model.getName()
+
+    if(isinstance(model, OriginalHybrid)):
+        model = model.ann.model
+    else:
+        model = model.model
+
+    path = '{}{}/'.format(path, str(cvIteration))
     createDirectory(path)
 
-    fileName = path + model.__class__.__name__ + "_" + str(cvIteration)
-    pickle.dump(model, open(fileName, 'wb'))
-    auxiliaryLog.log(fileName + ' saved')
+    # persist model
+    modelFullPath = '{}{}'.format(path, 'pickled{}'.format(modelName))
+    pickle.dump(model, open(modelFullPath, 'wb'))
+
+    # persist training history
+    historyFullPath = '{}{}'.format(path, 'pickledTrainingHistory')
+    pickle.dump(history.history, open(historyFullPath, 'wb'))
+
+    # persist confusion matrix
+    confusionMatrixFullPath = '{}{}'.format(path, 'confusion_matrix.csv')
+    with open(confusionMatrixFullPath, 'w') as f:
+        f.write(np.array2string(confusion_matrix, separator=', '))
+
+    auxiliaryLog.log('Artifacts for {} [iteration {}] saved'.format(modelName, cvIteration))
 
 def saveFoldToCsv(fold, foldIndex, destinationPath):
     fileName = "fold_" + str(foldIndex) + ".csv"
     fold.to_csv(destinationPath + fileName, index = False)
     auxiliaryLog.log(fileName + ' saved')
 
-def saveResultToFile(result, path, cvIteration):
+def saveResultToFile(result, path):
 	createDirectory(path)
+	
+	fileName = '{}{}'.format(path, 'result.csv')
+	result.to_csv(fileName)
 
-	fileName = path + "result_" + str(cvIteration)
-	pickle.dump(result, open(fileName, 'wb'))
 	auxiliaryLog.log(fileName + ' saved')
 
 def createDirectory(directoryPath):

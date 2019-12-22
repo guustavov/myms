@@ -3,9 +3,9 @@ import numpy as np
 from hybrid import OriginalHybrid
 
 def saveIterationArtifactsToFile(artifacts, path, cvIteration):
-    model = artifacts.model
-    history = artifacts.history
-    confusion_matrix = artifacts.confusion_matrix
+    model = artifacts['model']
+    history = artifacts['history']
+    confusion_matrix = artifacts['confusion_matrix']
 
     modelName = model.getName()
 
@@ -27,8 +27,7 @@ def saveIterationArtifactsToFile(artifacts, path, cvIteration):
 
     # persist confusion matrix
     confusionMatrixFullPath = '{}{}'.format(path, 'confusion_matrix.csv')
-    with open(confusionMatrixFullPath, 'w') as f:
-        f.write(np.array2string(confusion_matrix, separator=', '))
+    confusion_matrix.to_csv(confusionMatrixFullPath)
 
     auxiliaryLog.log('Artifacts for {} [iteration {}] saved'.format(modelName, cvIteration))
 

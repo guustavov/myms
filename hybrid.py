@@ -12,6 +12,8 @@ class OriginalHybrid(object):
         self.inferiorLimit = inferiorLimit
 
     def fit(self, train_x, train_Y):
+        history = ''
+        
         if not hasattr(self, 'ann'):
             self.ann = OriginalANN()
             history = self.ann.fit(train_x, train_Y)

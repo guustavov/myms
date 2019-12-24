@@ -12,10 +12,11 @@ class OriginalHybrid(object):
         self.inferiorLimit = inferiorLimit
 
     def fit(self, train_x, train_Y):
-        self.ann = OriginalANN()
+        if not hasattr(self, 'ann'):
+            self.ann = OriginalANN()
+            history = self.ann.fit(train_x, train_Y)
+        
         self.knn = OriginalKNN()
-
-        history = self.ann.fit(train_x, train_Y)
         self.knn.fit(train_x, train_Y)
 
         return history
@@ -67,3 +68,7 @@ class OriginalHybrid(object):
 
     def getName(self):
         return '{}_{}_{}'.format(self.__class__.__name__, self.superiorLimit, self.inferiorLimit)
+
+    def setAnnModel(self, annModel):
+        self.ann = OriginalANN()
+        self.ann.model = annModel

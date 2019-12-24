@@ -73,7 +73,7 @@ def run(model, foldsPath):
 		if (os.path.isfile(modelFileName)):
 			auxiliaryLog.log('skipped ' + modelClassName + ' [iteration ' + str(iteration) + ']')
 			with open(modelFileName) as f:
-				model.ann.model = pickle.load(f)
+				model.setAnnModel(pickle.load(f))
 			skipped = True
 
 		trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
@@ -88,8 +88,7 @@ def run(model, foldsPath):
 		train_Y = transformLabelToOrdinal(train_Y)
 		test_Y = transformLabelToOrdinal(test_Y)
 
-		if not skipped:
-			history = model.fit(train_x, train_Y)
+		history = model.fit(train_x, train_Y)
 
 		predictions = model.predict(test_x)
 		auxiliaryLog.log('performed prediction of {} [iteration {}]'.format(modelClassName, str(iteration)))

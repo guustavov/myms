@@ -68,15 +68,15 @@ def run(model, foldsPath):
 	resultMetricsDataFrame = pd.DataFrame(columns=columns)
 
 	for iteration in range(0,numberOfFolds):
-        skipped = False
-        modelFileName = pathToPersistModels + str(iteration) + '/pickled' + modelClassName
+		skipped = False
+		modelFileName = pathToPersistModels + str(iteration) + '/pickled' + modelClassName
 		if (os.path.isfile(modelFileName)):
-            auxiliaryLog.log('skipped ' + modelClassName + ' [iteration ' + str(iteration) + ']')
-            with open(modelFileName) as f:
-                model.ann.model = pickle.load(f)
-            skipped = True
+			auxiliaryLog.log('skipped ' + modelClassName + ' [iteration ' + str(iteration) + ']')
+			with open(modelFileName) as f:
+				model.ann.model = pickle.load(f)
+			skipped = True
 
-        trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
+		trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
 		trainData = pd.concat((pd.read_csv(fold) for fold in trainFolds))
 		testData = pd.read_csv(foldsPath + "fold_" + str(iteration) + ".csv")
 
@@ -87,9 +87,9 @@ def run(model, foldsPath):
 
 		train_Y = transformLabelToOrdinal(train_Y)
 		test_Y = transformLabelToOrdinal(test_Y)
-        
-        if not skipped:
-		    history = model.fit(train_x, train_Y)
+
+		if not skipped:
+			history = model.fit(train_x, train_Y)
 
 		predictions = model.predict(test_x)
 		auxiliaryLog.log('performed prediction of {} [iteration {}]'.format(modelClassName, str(iteration)))

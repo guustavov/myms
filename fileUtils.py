@@ -22,7 +22,7 @@ def saveIterationArtifactsToFile(artifacts, path, cvIteration):
 	pickle.dump(model, open(modelFullPath, 'wb'))
 
 	# persist training history
-	if not history == '':
+	if history is not None:
 		historyFullPath = '{}{}'.format(path, 'pickledTrainingHistory')
 		pickle.dump(history.history, open(historyFullPath, 'wb'))
 

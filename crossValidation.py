@@ -68,13 +68,13 @@ def run(model, foldsPath):
 	resultMetricsDataFrame = pd.DataFrame(columns=columns)
 
 	for iteration in range(0,numberOfFolds):
-		skipped = False
 		modelFileName = pathToPersistModels + str(iteration) + '/pickled' + modelClassName
 		if (os.path.isfile(modelFileName)):
-			auxiliaryLog.log('skipped ' + modelClassName + ' [iteration ' + str(iteration) + ']')
 			with open(modelFileName) as pickledAnnModel:
 				model.setAnnModel(pickle.load(pickledAnnModel))
-			skipped = True
+			auxiliaryLog.log('skipped ' + modelClassName + ' [iteration ' + str(iteration) + ']')
+		else:
+			model.clearModel()
 
 		trainFolds = glob.glob(foldsPath + 'fold_[!' + str(iteration) + ']*.csv')
 		trainData = pd.concat((pd.read_csv(fold) for fold in trainFolds))

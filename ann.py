@@ -33,9 +33,13 @@ class OriginalANN(object):
     def getName(self):
         return self.__class__.__name__
 
+    def clearModel(self):
+        self.model = Sequential()
+
 class SoftmaxANN(object):
     def __init__(self):
         self.model = Sequential()
+        pass
 
     def fit(self, x, Y):
         # Represent class label as binary vectors (One Hot Encoding)
@@ -64,3 +68,6 @@ class SoftmaxANN(object):
 
     def getName(self):
         return self.__class__.__name__
+
+    def clearModel(self):
+        self.model = Sequential()

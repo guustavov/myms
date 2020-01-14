@@ -93,11 +93,13 @@ def run(model, foldsPath):
 		predictions = model.predict(test_x)
 		auxiliaryLog.log('performed prediction of {} [iteration {}]'.format(modelClassName, str(iteration)))
 
+		report = metrics.classification_report(test_Y, predictions)
+		
 		resultMetrics = {
 			'acc': metrics.accuracy_score(test_Y, predictions),
-			'pre': metrics.precision_score(test_Y, predictions),
-			'rec': metrics.recall_score(test_Y, predictions),
-			'f1': metrics.f1_score(test_Y, predictions)
+			'pre': metrics.precision_score(test_Y, predictions, average=None),
+			'rec': metrics.recall_score(test_Y, predictions, average=None),
+			'f1': metrics.f1_score(test_Y, predictions, average=None)
 		}
 
 		if isinstance(model, OriginalHybrid):
@@ -109,7 +111,8 @@ def run(model, foldsPath):
 		iterationArtifacts = {
 			'model': model,
 			'history': history,
-			'confusion_matrix': confusion_matrix
+			'confusion_matrix': confusion_matrix,
+			'report': report
 		}
 
 		f.saveIterationArtifactsToFile(iterationArtifacts, pathToPersistModels, iteration)

@@ -93,7 +93,7 @@ def run(model, foldsPath):
 		predictions = model.predict(test_x)
 		auxiliaryLog.log('performed prediction of {} [iteration {}]'.format(modelClassName, str(iteration)))
 
-		report = metrics.classification_report(test_Y, predictions)
+		report = pd.DataFrame(metrics.classification_report(test_Y, predictions, output_dict=True)).transpose
 		
 		resultMetrics = {
 			'acc': metrics.accuracy_score(test_Y, predictions),

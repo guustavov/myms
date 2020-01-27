@@ -6,6 +6,7 @@ def saveIterationArtifactsToFile(artifacts, path, cvIteration):
 	model = artifacts['model']
 	history = artifacts['history']
 	confusion_matrix = artifacts['confusion_matrix']
+	report = artifacts['report']
 
 	modelName = model.getName()
 
@@ -29,6 +30,10 @@ def saveIterationArtifactsToFile(artifacts, path, cvIteration):
 	# persist confusion matrix
 	confusionMatrixFullPath = '{}{}'.format(path, 'confusion_matrix.csv')
 	confusion_matrix.to_csv(confusionMatrixFullPath)
+
+	# persist classification report
+	reportFullPath = '{}{}'.format(path, 'classification_report.csv')
+	report.to_csv(reportFullPath)
 
 	auxiliaryLog.log('Artifacts for {} [iteration {}] saved'.format(modelName, cvIteration))
 
